@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>룰렛 정보 입력</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <p>
+                    아마존 Q패스
+                </p>
+                <textarea class="q-pass form-control mb-2"></textarea>
+            </div>
+            <div class="col-4">
+                <p>
+                    푸바오 음료컵 세트 할인권
+                </p>
+                <textarea class="pubao form-control mb-2"></textarea>
+            </div>
+            <div class="col-4">
+                <p>MD상품 할인권</p>
+                <textarea class="md form-control mb-2"></textarea>
+            </div>
+        </div>
+        <div class="row text-center mb-5">
+            <div class="col align-self-center">
+                <button type="button" class="enter-code btn btn-info text-white">변경하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script>
+        function codeSplit(target) {
+            return $($(target).val().split('\n'));
+        }
+
+        $(function() {
+            $('.enter-code').on('click', function() {
+                let data = new FormData(),
+                    qPass = [],
+                    pubao = [],
+                    md = [],
+                    tmp = [];
+                if (codeSplit('.q-pass').length !== 30) {
+                    alert('아마존 Q패스의 수량이 맞지 않습니다.\n현재 수량: ' + codeSplit('.q-pass').length);
+                    return false;
+                }
+                codeSplit('.q-pass').each(function(index, el) {
+                    if ((index + 1) % 3 === 0) {
+                        tmp.push(el);
+                        qPass.push(tmp);
+                        tmp = []
+                    } else {
+                        tmp.push(el);
+                    }
+                })
+
+
+                if (codeSplit('.pubao').length !== 50) {
+                    alert('푸바오 컵세트의 수량이 맞지 않습니다.\n현재 수량: ' + codeSplit('.pubao').length);
+                    return false;
+                }
+                codeSplit('.pubao').each(function(index, el) {
+                    pubao.push(el);
+                })
+
+
+                if (codeSplit('.md').length !== 10) {
+                    alert('MD상품 할인권의 수량이 맞지 않습니다.\n현재 수량: ' + codeSplit('.md').length);
+                    return false;
+                }
+                codeSplit('.md').each(function(index, el) {
+                    md.push(el);
+                })
+                console.log(qPass);
+                console.log(pubao);
+                console.log(md);
+                data.append('qpass', qPass);
+                data.append('pubao', pubao);
+                data.append('md', md);
+
+                $.ajax({
+                    url: "https://hooks.zapier.com/hooks/catch/9127511/bah70fd/",
+                    method: "POST",
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    dataType: "json",
+                }).then(function(data) {
+                    console.log(data);
+                })
+
+            })
+        })
+    </script>
+</body>
+
+</html>

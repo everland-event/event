@@ -97,7 +97,10 @@
                     cache: false,
                     dataType: "json",
                 }).then(function(data) {
-                    console.log(data);
+                    if (data.status === "success") {
+                        alert("코드 업데이트가 완료되었습니다.")
+                        $('.md, .pubao, .q-pass').val('');
+                    }
                 })
 
             })
